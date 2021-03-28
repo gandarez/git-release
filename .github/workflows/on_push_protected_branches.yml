@@ -71,9 +71,9 @@ jobs:
       - name: Changelog
         uses: mikepenz/release-changelog-builder-action@v1.7.1
         id: changelog
-        with:
-          fromTag: ${{ steps.semver-tag.outputs.previous_tag }}
-          toTag: ${{ steps.semver-tag.outputs.semver_tag }}
+        # with:
+        #   fromTag: ${{ steps.semver-tag.outputs.previous_tag }}
+        #   toTag: ${{ steps.semver-tag.outputs.semver_tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Create release"
@@ -81,7 +81,7 @@ jobs:
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
-            github.git.createRelease({
+            github.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: ${{ steps.semver-tag.outputs.semver_tag }},
