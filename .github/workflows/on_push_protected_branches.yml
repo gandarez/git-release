@@ -69,8 +69,10 @@ jobs:
               sha: context.sha
             })
       - name: Changelog
-        uses: heinrichreimer/github-changelog-generator-action@latest
+        uses: heinrichreimer/github-changelog-generator-action@v2.2
         id: changelog
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: "Create release"
         uses: actions/github-script@v3
         with:
