@@ -84,9 +84,9 @@ jobs:
             github.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: ${{ steps.semver-tag.outputs.semver_tag }},
-              name: ${{ steps.semver-tag.outputs.semver_tag }},
-              body: ${{ steps.changelog.outputs.changelog }},
+              tag_name: "${{ steps.semver-tag.outputs.semver_tag }}",
+              name: "${{ steps.semver-tag.outputs.semver_tag }}",
+              body: "${{ steps.changelog.outputs.changelog }}",
               prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
             })
           debug: true
