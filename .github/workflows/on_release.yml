@@ -26,6 +26,7 @@ jobs:
           path: build/
   upload:
     name: Upload release assets
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
