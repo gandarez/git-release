@@ -69,10 +69,13 @@ jobs:
               sha: context.sha
             })
       - name: Changelog
-        uses: heinrichreimer/github-changelog-generator-action@v2.2
+        uses: mikepenz/release-changelog-builder-action@{latest-release}
         id: changelog
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fromTag: ${{ steps.semver-tag.outputs.previous_tag }}
+          toTag: ${{ steps.semver-tag.outputs.semver_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Create release"
         uses: actions/github-script@v3
         with:
@@ -83,8 +86,7 @@ jobs:
               repo: context.repo.repo,
               tag_name: ${{ steps.semver-tag.outputs.semver_tag }},
               name: ${{ steps.semver-tag.outputs.semver_tag }},
-              body: |
-                ${{ steps.changelog.outputs.changelog }},
+              body: ${{ steps.changelog.outputs.changelog }},
               prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
             })
           debug: true
