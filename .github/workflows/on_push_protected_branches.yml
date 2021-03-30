@@ -58,8 +58,8 @@ jobs:
         with:
           debug: true
       - name: "Sanitize changelog"
-      - id: "changelog-sanitized"
-      - run: |
+        id: "changelog-sanitized"
+        run: |
           export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
