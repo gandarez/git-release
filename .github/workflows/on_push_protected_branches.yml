@@ -60,15 +60,16 @@ jobs:
         #   toTag: ${{ steps.semver-tag.outputs.semver_tag }}
         # env:
         #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
       - name: "Create release"
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
-            export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
-            CHANGELOG="${CHANGELOG//'%'/'%25'}"
-            CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-            CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
             github.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
