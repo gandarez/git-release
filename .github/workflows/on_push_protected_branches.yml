@@ -62,12 +62,16 @@ jobs:
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           script: |
+            export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+            CHANGELOG="${CHANGELOG//'%'/'%25'}"
+            CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+            CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
             github.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: "${{ steps.semver-tag.outputs.semver_tag }}",
               name: "${{ steps.semver-tag.outputs.semver_tag }}",
-              body: ${{ steps.changelog.outputs.changelog }},
+              body: "$CHANGELOG",
               prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
             })
           debug: true
