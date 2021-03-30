@@ -69,13 +69,13 @@ jobs:
               sha: context.sha
             })
       - name: Changelog
-        uses: mikepenz/release-changelog-builder-action@v1.7.1
+        uses: gandarez/changelog-action@v1.0.0
         id: changelog
         # with:
         #   fromTag: ${{ steps.semver-tag.outputs.previous_tag }}
         #   toTag: ${{ steps.semver-tag.outputs.semver_tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: "Create release"
         uses: actions/github-script@v3
         with:
