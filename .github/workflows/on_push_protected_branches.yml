@@ -55,11 +55,8 @@ jobs:
       - name: Changelog
         uses: gandarez/changelog-action@v1.0.0
         id: changelog
-        # with:
-        #   fromTag: ${{ steps.semver-tag.outputs.previous_tag }}
-        #   toTag: ${{ steps.semver-tag.outputs.semver_tag }}
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          debug: true
       - run: |
           export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
