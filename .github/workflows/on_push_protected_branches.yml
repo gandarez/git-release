@@ -64,7 +64,8 @@ jobs:
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
           CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo "::set-output name=changelog::$(echo "$CHANGELOG")"
+          echo $CHANGELOG
+          echo "::set-output name=changelog::$CHANGELOG"
       - name: "Create release"
         uses: actions/github-script@v3
         with:
