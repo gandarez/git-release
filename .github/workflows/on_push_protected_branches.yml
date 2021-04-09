@@ -62,8 +62,8 @@ jobs:
         run: |
           export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
           CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'\r\n'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'\r\n'}"
           echo $CHANGELOG
           echo "::set-output name=changelog::$CHANGELOG"
       - name: "Create release"
