@@ -57,26 +57,40 @@ jobs:
         id: changelog
         with:
           debug: true
-      - name: "Sanitize changelog"
-        id: "changelog-sanitized"
-        run: |
-          export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'\r\n'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'\r\n'}"
-          echo $CHANGELOG
-          echo "::set-output name=changelog::toJSON($CHANGELOG)"
+      # - name: "Sanitize changelog"
+      #   id: "changelog-sanitized"
+      #   run: |
+      #     export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+      #     CHANGELOG="${CHANGELOG//'%'/'%25'}"
+      #     CHANGELOG="${CHANGELOG//$'\r'/'\r\n'}"
+      #     CHANGELOG="${CHANGELOG//$'\n'/'\r\n'}"
+      #     echo $CHANGELOG
+      #     echo "::set-output name=changelog::$CHANGELOG"
       - name: "Create release"
-        uses: actions/github-script@v3
+        uses: octokit/request-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          script: |
-            github.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: "${{ steps.semver-tag.outputs.semver_tag }}",
-              name: "${{ steps.semver-tag.outputs.semver_tag }}",
-              body: "${{ steps.changelog-sanitized.outputs.changelog }}",
-              prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
-            })
-          debug: true
+          route: POST /repos/{owner}/{repo}/releases
+          owner: ${{ github.owner }} 
+          repo: ${{ github.repository }}
+          tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
+          name: ${{ steps.semver-tag.outputs.semver_tag }}
+          body: |
+            |
+            ${{ steps.changelog.outputs.changelog }}
+          prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
+      # - name: "Create release"
+      #   uses: actions/github-script@v3
+      #   with:
+      #     github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      #     script: |
+      #       github.repos.createRelease({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         tag_name: "${{ steps.semver-tag.outputs.semver_tag }}",
+      #         name: "${{ steps.semver-tag.outputs.semver_tag }}",
+      #         body: "${{ steps.changelog-sanitized.outputs.changelog }}",
+      #         prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
+      #       })
+      #     debug: true
