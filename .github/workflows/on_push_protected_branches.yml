@@ -53,25 +53,25 @@ jobs:
               sha: context.sha
             })
       - name: Changelog
-        uses: gandarez/changelog-action@v1.0.1
+        uses: gandarez/changelog-action@v1.0.2
         id: changelog
         with:
           debug: true
-      - name: "Sanitize changelog"
-        id: "changelog-sanitized"
-        run: |
-          export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
-          echo $CHANGELOG
-          echo "::set-output name=changelog::$CHANGELOG"
+      # - name: "Sanitize changelog"
+      #   id: "changelog-sanitized"
+      #   run: |
+      #     export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+      #     CHANGELOG="${CHANGELOG//'%'/'%25'}"
+      #     CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+      #     CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+      #     echo "$CHANGELOG"
+      #     echo "::set-output name=changelog::$CHANGELOG"
       - name: "Create Release"
         uses: softprops/action-gh-release@v1
         with:
           name: ${{ steps.semver-tag.outputs.semver_tag }}
           tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
-          body: "${{ steps.changelog-sanitized.outputs.changelog }}"
+          body: ${{ steps.changelog.outputs.changelog }}
           prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
         env:
           GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
