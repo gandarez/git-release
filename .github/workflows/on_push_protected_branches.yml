@@ -57,15 +57,15 @@ jobs:
         id: changelog
         with:
           debug: true
-      # - name: "Sanitize changelog"
-      #   id: "changelog-sanitized"
-      #   run: |
-      #     export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
-      #     CHANGELOG="${CHANGELOG//'%'/'%25'}"
-      #     CHANGELOG="${CHANGELOG//$'\r'/'\r\n'}"
-      #     CHANGELOG="${CHANGELOG//$'\n'/'\r\n'}"
-      #     echo $CHANGELOG
-      #     echo "::set-output name=changelog::$CHANGELOG"
+      - name: "Sanitize changelog"
+        id: "changelog-sanitized"
+        run: |
+          export CHANGELOG="${{ steps.changelog.outputs.changelog }}"
+          CHANGELOG="${CHANGELOG//'%'/'%25'}"
+          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
+          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          echo $CHANGELOG
+          echo "::set-output name=changelog::$CHANGELOG"
       - name: "Create release"
         uses: octokit/request-action@v2.x
         env:
@@ -76,8 +76,7 @@ jobs:
           tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
           name: ${{ steps.semver-tag.outputs.semver_tag }}
           body: |
-            |
-            ${{ steps.changelog.outputs.changelog }}
+            ${{ steps.changelog-sanitized.outputs.changelog }}
           prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
       # - name: "Create release"
       #   uses: actions/github-script@v3
