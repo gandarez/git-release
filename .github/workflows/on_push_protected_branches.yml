@@ -71,8 +71,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          route: POST /repos/{owner}/{repo}/releases
-          owner: ${{ github.owner }} 
+          route: POST /repos/{repo}/releases
           repo: ${{ github.repository }}
           tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
           name: ${{ steps.semver-tag.outputs.semver_tag }}
