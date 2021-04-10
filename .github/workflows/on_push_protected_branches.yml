@@ -76,6 +76,7 @@ jobs:
           tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
           name: ${{ steps.semver-tag.outputs.semver_tag }}
           body: |
+            |
             ${{ steps.changelog-sanitized.outputs.changelog }}
           prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
       # - name: "Create release"
