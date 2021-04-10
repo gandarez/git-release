@@ -66,19 +66,26 @@ jobs:
           CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
           echo $CHANGELOG
           echo "::set-output name=changelog::$CHANGELOG"
-      - name: "Create release"
-        uses: octokit/request-action@v2.x
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: "Create Release"
+        uses: softprops/action-gh-release@v1
         with:
-          route: POST /repos/{repo}/releases
-          repo: ${{ github.repository }}
-          tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
           name: ${{ steps.semver-tag.outputs.semver_tag }}
-          body: |
-            |
-            ${{ steps.changelog-sanitized.outputs.changelog }}
+          tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
           prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      # - name: "Create release"
+      #   uses: octokit/request-action@v2.x
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     route: POST /repos/{repo}/releases
+      #     repo: ${{ github.repository }}
+      #     tag_name: ${{ steps.semver-tag.outputs.semver_tag }}
+      #     name: ${{ steps.semver-tag.outputs.semver_tag }}
+      #     body: ${{ steps.changelog-sanitized.outputs.changelog }}
+      #     prerelease: ${{ steps.semver-tag.outputs.is_prerelease }}
       # - name: "Create release"
       #   uses: actions/github-script@v3
       #   with:
