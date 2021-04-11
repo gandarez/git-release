@@ -56,6 +56,9 @@ jobs:
         uses: gandarez/changelog-action@debug
         id: changelog
         with:
+          exclude: |
+            "^Merge .*"
+            "bla bla .*"
           debug: true
       # - name: "Sanitize changelog"
       #   id: "changelog-sanitized"
